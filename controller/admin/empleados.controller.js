@@ -1,5 +1,6 @@
 import express from 'express';
 import { sequelize } from '../../config/database.js';
+import { Op } from 'sequelize';
 import initModels from '../../models/init-models.js';
 import { body, validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
@@ -307,6 +308,37 @@ empleados.delete('/:id', async (req, res) => {
     res.status(200).json({ message: 'Empleado eliminado' });
   } catch (error) {
     await t.rollback();
+    res.status(500).json({ error: error.message });
+  }
+});
+
+//buscar empleado por nombre apellidos 
+empleados.get('/buscar/:nombre', async (req, res) => {
+  const { nombre } = req.params;
+  try {
+    const empleadosList = await Empleados.findAll({
+      where: {
+        [Op.or]: [
+          { '$usuario.persona.nombre$': { [Op.like]: `%${nombre}%` } },
+          { '$usuario.persona.apellido_paterno$': { [Op.like]: `%${nombre}%` } },
+          { '$usuario.persona.apellido_materno$': { [Op.like]: `%${nombre}%` } }
+        ]
+      },
+      include: [
+        {
+          model: Usuarios,
+          as: 'usuario',
+          include: [
+            {
+              model: Personas,
+              as: 'persona'
+            }
+          ]
+        }
+      ]
+    });
+    res.status(200).json(empleadosList);
+  } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
