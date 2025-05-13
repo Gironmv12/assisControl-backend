@@ -160,6 +160,24 @@ empleados.get('/', async (req, res) => {
   }
 });
 
+//obtener solo la lista de usuarios
+empleados.get('/usuarios', async (req, res) => {
+  try {
+    const usuariosList = await Usuarios.findAll({
+      include: [
+        {
+          model: Personas,
+          as: 'persona'
+        }
+      ]
+    });
+    res.status(200).json(usuariosList);
+
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Obtener un empleado por ID
 empleados.get('/:id', async (req, res) => {
   const { id } = req.params;
@@ -188,6 +206,8 @@ empleados.get('/:id', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
 
 // Actualizar un empleado
 empleados.put('/:id', [
