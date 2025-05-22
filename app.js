@@ -10,7 +10,7 @@ import registrarAsistenciaRoute from './routes/registrarAsistencia.route.js';
 import horariosRoute from './routes/horarios.route.js';
 import perfilRoute from './routes/perfil.route.js';
 import dashboardRoute from './routes/dashbord.route.js';
-
+import resumenRoute from './routes/resumen.route.js';
 
 //cargar las variables de entorno
 dotenv.config();
@@ -54,6 +54,10 @@ app.use('/api', horariosRoute);
 app.use('/api', perfilRoute);
 
 app.use('/api', dashboardRoute);
+
+app.use('/api', resumenRoute);
+
+
 
 //inicializar la base de datos
 connectDB().then(() => {

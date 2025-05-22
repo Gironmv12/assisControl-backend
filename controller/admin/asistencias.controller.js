@@ -125,6 +125,7 @@ asistencia.get(
   }
 );
 
+
 //actualizar entrada/salida 
 asistencia.put('/actualizar/:id', [
     body('hora_entrada').optional().matches(/^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d{3})?$/).withMessage('Invalid time format for hora_entrada'),
